@@ -1,17 +1,424 @@
-<HTML>
-  <Title>
-    Static Web App 2025 03
-  </Title>
-  <Body>
-    <h1>2026 03 05 Vibe Code Testing </h1>
-    <h2>This is Static Web App </h2>
-    <h3>
-      TEST TEST TEST TEST TEST
-    </h3>
-    <BR>
-    <BR>
-    Custome domain name implementation 
-    <BR>
-    by Angelo Kang
-  </Body>
-</HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>St. Mary Work Logs</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a3c5e;
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    header span {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      color: #1a3c5e;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e4e8ed;
+      padding-bottom: 10px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input, select, textarea {
+      padding: 10px 14px;
+      border: 1.5px solid #d0d5dd;
+      border-radius: 7px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #333;
+      transition: border-color 0.2s;
+      background: #fafafa;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #1a3c5e;
+      background: white;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-add {
+      background: #1a3c5e;
+      color: white;
+      border: none;
+      padding: 12px 36px;
+      border-radius: 7px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+
+    .btn-add:hover {
+      background: #24527f;
+    }
+
+    .btn-add:active {
+      transform: scale(0.98);
+    }
+
+    /* Log list */
+    .log-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .log-controls input[type="search"] {
+      flex: 1;
+      min-width: 180px;
+      max-width: 320px;
+    }
+
+    .log-count {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    thead tr {
+      background: #f0f4f8;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 11px 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      border-bottom: 2px solid #dde3ea;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #eef0f3;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover {
+      background: #f7f9fc;
+    }
+
+    tbody td {
+      padding: 12px 14px;
+      vertical-align: top;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .badge-maintenance { background: #fff3cd; color: #7a5200; }
+    .badge-admin       { background: #cce5ff; color: #004085; }
+    .badge-event       { background: #d4edda; color: #155724; }
+    .badge-other       { background: #e2e3e5; color: #383d41; }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #c0392b;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 2px 6px;
+      border-radius: 5px;
+      transition: background 0.15s;
+    }
+
+    .btn-delete:hover {
+      background: #fdecea;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #aaa;
+      padding: 40px 0;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 20px 16px;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      tbody td {
+        padding: 6px 10px;
+      }
+      tbody td::before {
+        content: attr(data-label) ": ";
+        font-weight: 700;
+        color: #555;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>St. Mary Work Logs</h1>
+  <span id="currentDate"></span>
+</header>
+
+<div class="container">
+
+  <!-- Add Log Form -->
+  <div class="card">
+    <h2>Add Work Log</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="logDate">Date</label>
+        <input type="date" id="logDate" />
+      </div>
+      <div class="form-group">
+        <label for="logCategory">Category</label>
+        <select id="logCategory">
+          <option value="maintenance">Maintenance</option>
+          <option value="admin">Admin</option>
+          <option value="event">Event</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="logWorker">Worker Name</label>
+        <input type="text" id="logWorker" placeholder="e.g. Angelo Kang" />
+      </div>
+      <div class="form-group">
+        <label for="logHours">Hours</label>
+        <input type="number" id="logHours" placeholder="e.g. 3.5" min="0" step="0.5" />
+      </div>
+      <div class="form-group full">
+        <label for="logDesc">Description</label>
+        <textarea id="logDesc" placeholder="Describe the work done..."></textarea>
+      </div>
+    </div>
+    <button class="btn-add" onclick="addLog()">ADD</button>
+  </div>
+
+  <!-- Log List -->
+  <div class="card">
+    <h2>Work Log History</h2>
+    <div class="log-controls">
+      <input type="search" id="searchInput" placeholder="Search logs..." oninput="renderLogs()" />
+      <span class="log-count" id="logCount"></span>
+    </div>
+    <div id="logTableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Worker</th>
+            <th>Category</th>
+            <th>Hours</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;">No work logs yet. Add one above.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Set today's date in header and default date input
+  const today = new Date();
+  document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  document.getElementById('logDate').value = today.toISOString().split('T')[0];
+
+  // Load logs from localStorage
+  function getLogs() {
+    return JSON.parse(localStorage.getItem('stmary_worklogs') || '[]');
+  }
+
+  function saveLogs(logs) {
+    localStorage.setItem('stmary_worklogs', JSON.stringify(logs));
+  }
+
+  function addLog() {
+    const date     = document.getElementById('logDate').value;
+    const category = document.getElementById('logCategory').value;
+    const worker   = document.getElementById('logWorker').value.trim();
+    const hours    = document.getElementById('logHours').value;
+    const desc     = document.getElementById('logDesc').value.trim();
+
+    if (!date || !worker || !desc) {
+      alert('Please fill in Date, Worker Name, and Description.');
+      return;
+    }
+
+    const logs = getLogs();
+    logs.unshift({
+      id: Date.now(),
+      date, category, worker,
+      hours: hours || '-',
+      desc
+    });
+    saveLogs(logs);
+    renderLogs();
+
+    // Reset form fields (keep date & category)
+    document.getElementById('logWorker').value = '';
+    document.getElementById('logHours').value  = '';
+    document.getElementById('logDesc').value   = '';
+  }
+
+  function deleteLog(id) {
+    if (!confirm('Delete this work log?')) return;
+    const logs = getLogs().filter(l => l.id !== id);
+    saveLogs(logs);
+    renderLogs();
+  }
+
+  const badgeClass = {
+    maintenance: 'badge-maintenance',
+    admin:       'badge-admin',
+    event:       'badge-event',
+    other:       'badge-other'
+  };
+
+  function renderLogs() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    let logs = getLogs();
+
+    if (query) {
+      logs = logs.filter(l =>
+        l.worker.toLowerCase().includes(query) ||
+        l.desc.toLowerCase().includes(query)   ||
+        l.date.includes(query)                 ||
+        l.category.includes(query)
+      );
+    }
+
+    const tbody = document.getElementById('logBody');
+    const empty = document.getElementById('emptyState');
+    document.getElementById('logCount').textContent = `${logs.length} record${logs.length !== 1 ? 's' : ''}`;
+
+    if (logs.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+
+    empty.style.display = 'none';
+    tbody.innerHTML = logs.map(l => `
+      <tr>
+        <td data-label="Date">${l.date}</td>
+        <td data-label="Worker">${escHtml(l.worker)}</td>
+        <td data-label="Category">
+          <span class="badge ${badgeClass[l.category] || 'badge-other'}">
+            ${l.category.charAt(0).toUpperCase() + l.category.slice(1)}
+          </span>
+        </td>
+        <td data-label="Hours">${l.hours}</td>
+        <td data-label="Description">${escHtml(l.desc)}</td>
+        <td>
+          <button class="btn-delete" title="Delete" onclick="deleteLog(${l.id})">&#x1F5D1;</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Initial render
+  renderLogs();
+</script>
+
+</body>
+</html>
